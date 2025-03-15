@@ -48,9 +48,6 @@ if st.button("计算最优解"):
     if not items:
         st.error("请先输入商品信息。")
     else:
-        # 计算最小商品单价
-        min_price = min(item["adjusted_price"] for item in items)
-
         # 定义问题
         prob = pulp.LpProblem("Minimize_Balance", pulp.LpMinimize)
 
@@ -63,12 +60,8 @@ if st.button("计算最优解"):
         # 定义约束条件：总金额不超过初始资金
         prob += pulp.lpSum([items[i]["adjusted_price"] * quantities[i] for i in range(len(items))]) <= initial_funds
 
-        # 设置求解器参数
-        solver = pulp.PULP_CBC_CMD(
-            gapRel=0.01,  # 相对容差 1%
-            timeLimit=60,  # 最大运行时间 60 秒
-            msg=True  # 显示求解器日志
-        )
+        # 使用默认求解器参数
+        solver = pulp.PULP_CBC_CMD(msg=True)  # 仅启用日志，不设置其他参数
 
         # 求解
         prob.solve(solver)
@@ -94,9 +87,5 @@ if st.button("计算最优解"):
             balance = initial_funds - total_amount
             st.write(f"**总金额:** {total_amount:.2f}")
             st.write(f"**余额:** {balance:.2f}")
-
-            # 检查余额是否小于最小商品单价
-            if balance < min_price:
-                st.write(f"余额 {balance:.2f} 已小于最小商品单价 {min_price:.2f}，停止运算。")
         else:
             st.error("未找到最优解。请检查输入数据。")
