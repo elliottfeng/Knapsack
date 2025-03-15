@@ -6,8 +6,8 @@ import pandas as pd
 st.title("商品组合优化器")
 st.write("输入商品信息和初始资金，计算最优组合以最小化余额。")
 
-# 输入初始资金
-initial_funds = st.number_input("初始资金", min_value=0, value=50000)
+# 输入初始资金（浮点数，无最大值）
+initial_funds = st.number_input("初始资金", min_value=0.0, value=5000000.0, step=1.0)
 
 # 输入商品信息
 st.header("商品信息录入")
@@ -20,7 +20,7 @@ for i in range(num_items):
     with cols[i % 2]:  # 交替分配到两列
         st.subheader(f"商品 {i+1}")
         name = st.text_input(f"商品 {i+1} 名称", value=f"商品 {i+1}", key=f"name_{i}")
-        price = st.number_input(f"商品 {i+1} 初始单价", min_value=0, value=1000, key=f"price_{i}")
+        price = st.number_input(f"商品 {i+1} 初始单价", min_value=0.0, value=1000.0, step=1.0, key=f"price_{i}")
         items.append({"name": name, "initial_price": price})
 
 # 展示商品信息
